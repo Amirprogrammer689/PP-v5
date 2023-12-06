@@ -2,12 +2,12 @@ import os
 import csv
 
 def create_annotation():
- 
-    dataset_path = os.path.abspath("dataset")
+    
+    '''
+    Функция, которая создает аннотации(annotations.csv) для dataset
+    '''
 
-    if os.path.exists("annotations.csv"):
-        print("Файл уже существует")
-        return
+    dataset_path = os.path.abspath("dataset")
 
     with open('annotations.csv', 'w') as file:
         writer = csv.writer(file)
@@ -17,10 +17,9 @@ def create_annotation():
                 relative_path = os.path.relpath(absolute_path)
                 class_name = os.path.basename(os.path.dirname(absolute_path))
                 writer.writerow([absolute_path, relative_path, class_name])
-
-    print('Аннотации успешно созданы')
    
-    
+
+
 def main():
     create_annotation()
 

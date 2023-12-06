@@ -5,6 +5,18 @@ import random
 import re
 
 def get_new_path(class_name, copy_dataset_path):
+
+    '''
+    Генерирует новый путь для файла из указанного класса в новом датасете.
+
+    Args:
+        class_name (str): Название класса.
+        copy_dataset_path (str): Путь к новому датасету.
+
+    Returns:
+        str: Новый путь для файла из указанного класса в новом датасете.
+    '''
+
     random_filename = f"{random.randint(0, 10000)}.jpg"
     new_filename = f"{class_name}_{random_filename}"
     new_filename = re.sub("\D{5}_\D{4}_", '', new_filename)
@@ -12,6 +24,11 @@ def get_new_path(class_name, copy_dataset_path):
     return new_path
 
 def create_dataset_random_and_annotations():
+
+    '''
+    Создает новый датасет с копиями файлов из исходного датасета и генерирует файл аннотаций.
+    '''
+
     dataset_path = os.path.abspath("dataset")
 
     if not os.path.exists("dataset_random"):
@@ -36,6 +53,11 @@ def create_dataset_random_and_annotations():
                 writer.writerow([new_path, relative_path, class_name])
 
 def main():
+    
+    '''
+    Точка входа в программу. Вызывает функцию для создания нового датасета и генерации файлов аннотаций.
+    '''
+
     create_dataset_random_and_annotations()
 
 if __name__ == "__main__":

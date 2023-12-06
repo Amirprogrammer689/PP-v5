@@ -4,6 +4,11 @@ import csv
 import re
 
 def copy_dataset():
+
+    '''
+    Копирует файлы из датасета в новую директорию.
+    '''
+
     dataset_path = os.path.abspath("dataset")
 
     if not os.path.exists("copy_dataset"):
@@ -20,6 +25,11 @@ def copy_dataset():
             shutil.copy(original_path, new_path)
 
 def create_annotation_of_copy_dataset():
+
+    '''
+    Функция, которая создает аннотации(annotations_2.scv) для copy_dataset
+    '''
+
     dataset_path = os.path.abspath("copy_dataset")
 
     with open('annotations_2.csv', 'w') as file:
