@@ -3,14 +3,15 @@ import typing
 from typing import Optional
 
 def read_file(path: str) -> list[list[str]]:
-    '''Читает файл и возвращает матрицу имён файлов
-    Parameters
-    ----------
-    path(str) : Путь к файлу
-    Returns
-    -------
-    list[list[str]]
-    Матрица имён файлов'''
+    '''
+    Читает файл CSV и возвращает список списков, содержащих пути к файлам и классы.
+
+    Аргументы:
+    path (str): Путь к файлу CSV.
+
+    Возвращает:
+    list[list[str]]: Список списков, содержащих пути к файлам и классы.
+    '''
     files: list[list[str]] = []
     with open(path, "r") as csvfile:
         reader: csv.DictReader = csv.DictReader(csvfile, delimiter=",")
@@ -20,13 +21,25 @@ def read_file(path: str) -> list[list[str]]:
 
 
 class Iterator:
-    '''Класс-итератор для получения полного пути к файлу'''
     def __init__(self, files_class: str, path: str) -> None:
+        '''
+        Инициализирует итератор с классом файла и путем к файлу.
+        
+        Аргументы:
+        files_class (str): Класс файлов для перебора.
+        path (str): Путь к файлу CSV.
+        '''
         self.file_class: str = files_class
         csv_f: list[list[str]] = read_file(path)
         self.annotation: list[list[str]] = [i for i in csv_f if i[1] == self.file_class]
 
     def __next__(self) -> Optional[str]:
+        '''
+        Получает следующий путь к файлу на основе указанного класса.
+
+        Возвращает:
+        Optional[str]: Следующий путь к файлу или None, если больше нет путей.
+        '''
         if self.annotation:
             item_0: str = self.annotation[0][0]
             self.annotation: list[list[str]] = self.annotation[1:]
