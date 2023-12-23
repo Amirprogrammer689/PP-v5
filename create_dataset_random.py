@@ -1,64 +1,47 @@
+import csv
 import os
 import shutil
-import csv
 import random
-import re
 
-def get_new_path(class_name, copy_dataset_path):
 
-    '''
-    Генерирует новый путь для файла из указанного класса в новом датасете.
+def write_file(file_name: str, data: list[list[str]]) -> None:
+    '''Записывает данные в csv файл'''
+    with open(file_name, "w", newline="") as file:
+        writer = csv.writer(file, delimiter=",")
+        for row in data:
+            writer.writerow(row)
 
-    Args:
-        class_name (str): Название класса.
-        copy_dataset_path (str): Путь к новому датасету.
 
-    Returns:
-        str: Новый путь для файла из указанного класса в новом датасете.
-    '''
+def create_dataset_random_and_annotations(start_path: str, end_path: str, file_name: str) -> None:
+    '''Копирует файлы и создает файл аннотации'''
+    random_names = []
+    data = [["full_path", "path", "class"]]
+    dirs = os.listdir(start_path)
 
-    random_filename = f"{random.randint(0, 10000)}.jpg"
-    new_filename = f"{class_name}_{random_filename}"
-    new_filename = re.sub("\D{5}_\D{4}_", '', new_filename)
-    new_path = os.path.join(copy_dataset_path, new_filename)
-    return new_path
+    if not os.path.isdir(end_path):
+        os.makedirs(end_path)
 
-def create_dataset_random_and_annotations():
+    for dir in dirs:
+        path = os.path.join(start_path, dir)
+        files = os.listdir(path)
 
-    '''
-    Создает новый датасет с копиями файлов из исходного датасета и генерирует файл аннотаций.
-    '''
+        for file in files:
+            random_file_name = random.randint(0, 10000)
 
-    dataset_path = os.path.abspath("dataset")
+            source_file = os.path.join(start_path, dir, file)
+            destination_file = os.path.join(end_path, str(random_file_name) + ".jpg")
 
-    if not os.path.exists("dataset_random"):
-        os.makedirs("dataset_random")
-    copy_dataset_path = os.path.abspath("dataset_random")
+            shutil.copyfile(source_file, destination_file)
 
-    with open('annotations_3.csv', 'w') as file:
-        writer = csv.writer(file)
+            full_path = os.path.abspath(os.path.join(end_path, str(random_file_name) + ".jpg"))
+            relative_path = os.path.join(end_path, str(random_file_name) + ".jpg")
+            data.append([full_path, relative_path, dir])
 
-        for root, dirs, files in os.walk(dataset_path):
-            for filename in files:
-                class_name = os.path.basename(root)
-                class_name = class_name.replace(" ", "_")
-                original_path = os.path.join(root, filename)
-                new_path = get_new_path(class_name, copy_dataset_path)
-                while os.path.exists(new_path):
-                    new_path = get_new_path(class_name, copy_dataset_path)
+    write_file(file_name, data)
 
-                shutil.copy(original_path, new_path)
-
-                relative_path = os.path.relpath(new_path)
-                writer.writerow([new_path, relative_path, class_name])
-
-def main():
-    
-    '''
-    Точка входа в программу. Вызывает функцию для создания нового датасета и генерации файлов аннотаций.
-    '''
-
-    create_dataset_random_and_annotations()
 
 if __name__ == "__main__":
-    main()
+    start_path = "dataset"
+    end_path = "dataset_random"
+    file_name = "annotations_3.csv"
+    create_dataset_random_and_annotations(start_path, end_path, file_name)

@@ -1,50 +1,59 @@
+import csv
 import os
 import shutil
-import csv
-import re
+import typing
 
-def copy_dataset():
 
+def write_file(file_name: str, data: list[list[str]]) -> None:
+    '''Записывает данные в csv файл
+    Args:
+        file_name (str): Имя файла аннотации 
+        data (list[list[str]]): Данные 
     '''
-    Копирует файлы из датасета в новую директорию.
+    with open(file_name, "w", newline="") as file:
+        writer = csv.writer(file, delimiter=",")
+        for row in data:
+            writer.writerow(row)
+
+
+def copy_files(start_path: str, end_path: str) -> None:
+    '''Копирует файлы
+    Args:
+        start_path (str): Исходный путь
+        end_path (str): Целевой путь
     '''
+    if not os.path.exists(end_path):
+        os.makedirs(end_path)
 
-    dataset_path = os.path.abspath("dataset")
+    for root, dirs, files in os.walk(start_path):
+        for file in files:
+            source_file = os.path.join(root, file)
+            destination_file = os.path.join(end_path, os.path.basename(root) + "_" + file)
+            shutil.copyfile(source_file, destination_file)
 
-    if not os.path.exists("copy_dataset"):
-        os.makedirs("copy_dataset")
-    copy_dataset_path = os.path.abspath("copy_dataset")
 
-    for root, dirs, files in os.walk(dataset_path):
-        for filename in files:
+def create_annotation(start_path: str, end_path: str, file_name: str) -> None:
+    '''Создает аннотацию
+    Args:
+        start_path (str): Исходный путь
+        end_path (str): Целевой путь
+        file_name (str): Имя файла аннотации
+    '''
+    data = [["full_path", "path", "class"]]
+
+    for root, dirs, files in os.walk(start_path):
+        for file in files:
+            full_path = os.path.abspath(os.path.join(end_path, os.path.basename(root) + "_" + file))
+            relative_path = os.path.relpath(full_path, end_path)
             class_name = os.path.basename(root)
-            class_name = class_name.replace(" ", "_")
-            new_filename = f"{class_name}_{filename}"
-            original_path = os.path.join(root, filename)
-            new_path = os.path.join(copy_dataset_path, new_filename)
-            shutil.copy(original_path, new_path)
+            data.append([full_path, relative_path, class_name])
 
-def create_annotation_of_copy_dataset():
+    write_file(file_name, data)
 
-    '''
-    Функция, которая создает аннотации(annotations_2.scv) для copy_dataset
-    '''
-
-    dataset_path = os.path.abspath("copy_dataset")
-
-    with open('annotations_2.csv', 'w') as file:
-        writer = csv.writer(file)
-        for root, dirs, files in os.walk(dataset_path):
-            for filename in files:
-                absolute_path = os.path.abspath(os.path.join(root, filename))
-                relative_path = os.path.relpath(absolute_path)
-                class_name = os.path.basename(absolute_path)
-                class_name = re.sub("_\d{4}.jpg", '', class_name)
-                writer.writerow([absolute_path, relative_path, class_name])
-
-def main():
-    copy_dataset()
-    create_annotation_of_copy_dataset()
 
 if __name__ == "__main__":
-    main()
+    start_path = "dataset"
+    end_path = "dataset_copy"
+    file_name = "annotations_2.csv"
+    copy_files(start_path, end_path)
+    create_annotation(start_path, end_path, file_name)
