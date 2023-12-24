@@ -61,13 +61,13 @@ def read_and_split_image(df: pd.DataFrame, class_id: int) -> tuple:
     return r, g, b
 
 def plot_histograms(r, g, b):
-    plt.hist(r.ravel(), bins=256, color='blue')
-    plt.hist(g.ravel(), bins=256, color='blue')
-    plt.hist(b.ravel(), bins=256, color='blue')
+    plt.plot(range(256), cv2.calcHist([r], [0], None, [256], [0, 256]), color='red')
+    plt.plot(range(256), cv2.calcHist([g], [0], None, [256], [0, 256]), color='green')
+    plt.plot(range(256), cv2.calcHist([b], [0], None, [256], [0, 256]), color='blue')
 
     plt.xlabel("OX")
     plt.ylabel("OY")
-    plt.title("histogramm")
+    plt.title("Histogramm")
 
     plt.show()
     
