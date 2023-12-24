@@ -31,12 +31,13 @@ class MainWindow(QMainWindow):
 
     def click_init_start_path(self):
         self.start_path = QFileDialog.getExistingDirectory(self, "Выберите путь к датасету")
+
+
     '''Функционал кнопки для пролистывания белых медведей
     Parameters
     —--------   
     self: Новый объект
     '''
-
     def click_next_polar(self):
         path = next(self.polar_iterator)
         self.resize_image(path)
@@ -46,7 +47,6 @@ class MainWindow(QMainWindow):
     —--------
     self: Новый объект
     '''
-
     def click_next_brown(self):
         path = next(self.brown_iterator)
         self.resize_image(path)
@@ -57,7 +57,6 @@ class MainWindow(QMainWindow):
     self: Новый объект
     path: Путь
     '''
-
     def resize_image(self, path):
         pixmap = QPixmap(path)
         self.ui.image.setPixmap(pixmap)
@@ -67,7 +66,6 @@ class MainWindow(QMainWindow):
     —--------
     self: Новый объект
     '''
-
     def click_open_annotation(self):
         filter = "csv(*.csv)"
         path = QFileDialog.getOpenFileName(filter=filter)
@@ -79,17 +77,12 @@ class MainWindow(QMainWindow):
     —--------
     self: Новый объект
     '''
-
     def click_button_annotation(self):
         if self.start_path:
             path_to_annotation: str = "annotations_1.csv"
             create_annotation.create_annotation(os.path.relpath(self.start_path), path_to_annotation)
         else:
             print("Путь к датасету не выбран")
-        #path = QFileDialog.getExistingDirectory(self, "Путь к dataset")
-        #path_to_annotation: str = "annotations_1.csv"
-        #print(os.path.relpath(path))
-        #create_annotation.create_annotation(os.path.relpath(path), path_to_annotation)
 
     '''Функционал копирования аннотации и dataset 
     Parameters
@@ -104,11 +97,6 @@ class MainWindow(QMainWindow):
             dataset_copy.create_annotation(os.path.relpath(self.start_path), os.path.relpath(end_path), file_name)
         else:
             print("Путь к датасету не выбран")
-        #start_path: str = "dataset"
-        #end_path: str = "dataset_copy"
-        #file_name: str = "annotations_2.csv"
-        #dataset_copy.copy_files(start_path, end_path)
-        #dataset_copy.create_annotation(os.path.relpath(start_path), os.path.relpath(end_path), file_name)
 
     '''Функционал копирования аннотации и dataset с рандомными номерами
     Parameters
@@ -122,10 +110,6 @@ class MainWindow(QMainWindow):
             create_dataset_random.create_dataset_random_and_annotations(os.path.relpath(self.start_path), os.path.relpath(end_path), file_name)
         else:
             print("Путь к датасету не выбран")
-        #start_path: str = "dataset"
-        #end_path: str = "dataset_random"
-        #file_name: str = "annotations_3.csv"
-        #create_dataset_random.create_dataset_random_and_annotations(os.path.relpath(start_path), os.path.relpath(end_path), file_name)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
