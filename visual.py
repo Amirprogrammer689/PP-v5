@@ -28,6 +28,11 @@ class Ui_MainWindow(object):
 "color: rgb(255, 50, 255);")
         self.button_annotation.setObjectName("button_annotation")
         self.horizontalLayout.addWidget(self.button_annotation)
+        self.button_init_start_path = QtWidgets.QPushButton(self.tab)
+        self.button_init_start_path.setStyleSheet("background-color: rgb(45, 45, 45);\n"
+"color: rgb(255, 50, 255);")
+        self.button_init_start_path.setObjectName("button_init_start_path")
+        self.horizontalLayout.addWidget(self.button_init_start_path)
         self.button_dataset_copy = QtWidgets.QPushButton(self.tab)
         self.button_dataset_copy.setStyleSheet("background-color: rgb(45, 45, 45);\n"
 "color: rgb(255, 50, 255);")
@@ -79,6 +84,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Медведи"))
         self.button_annotation.setText(_translate("MainWindow", "Создание аннотации"))
+        self.button_init_start_path.setText(_translate("MainWindow", "Инициализация пути к датасету"))
         self.button_dataset_copy.setText(_translate("MainWindow", "Копирование датасета (class_0000.jpg)"))
         self.button_dataset_rand.setText(_translate("MainWindow", "Копирование датасета (random names)"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Аннотации"))
